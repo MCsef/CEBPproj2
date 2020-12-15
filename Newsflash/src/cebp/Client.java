@@ -87,7 +87,7 @@ public class Client implements ConsumerInterface<News>, ProducerInterface<News>
 		this.produce(event, n);
 	}
 
-	private void addNews(News n) 
+	public void addNews(News n) 
 	{
 		if (!this.news.contains(n))
 			this.news.add(n);
@@ -102,7 +102,7 @@ public class Client implements ConsumerInterface<News>, ProducerInterface<News>
 			}
 		}
 		if (n != null) {
-			Event<News> readNews = new Event<News>("UPDATE_READER_NEWS");
+			Event<News> readNews = new Event<News>("UPDATE_CLIENT_NEWS");
 			readNews.setEmmiter(this);
 			this.produce(readNews, n);
 		}

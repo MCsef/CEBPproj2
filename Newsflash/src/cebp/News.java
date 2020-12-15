@@ -9,10 +9,10 @@ public class News
 	private String category;
 	private String content;
 	private String author;
-	private Date publishDate;
-	private Date modifyDate;
+	private String publishDate;
+	private String modifyDate;
 	
-	public News(int id, String title, String category, String content, String author, Date publishDate, Date modifyDate) {
+	public News(int id, String title, String category, String content, String author, String publishDate, String modifyDate) {
 		this.id = id;
 		this.title=title;
 		this.category=category;
@@ -42,11 +42,11 @@ public class News
 		return author;
 	}
 	
-	public Date getPublishDate() {
+	public String getPublishDate() {
 		return publishDate;
 	}
 	
-	public Date getModifyDate() {
+	public String getModifyDate() {
 		return modifyDate;
 	}
 	
@@ -70,11 +70,15 @@ public class News
 		this.author = author;
 	}
 	
-	public void setPublishDate(Date publishDate) {
+	public void setPublishDate(String publishDate) {
 		this.publishDate = publishDate;
 	}
 	
-	public void setModifyDate(Date modifyDate) {
+	public void setModifyDate(String modifyDate) {
 		this.modifyDate = modifyDate;
+	}
+	
+	public String toString() {
+		return this.title+" "+this.category+" "+this.content;
 	}
 }

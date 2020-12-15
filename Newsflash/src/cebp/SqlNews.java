@@ -62,8 +62,8 @@ public class SqlNews implements INews
 				String category = rs.getString("category");
 				String content = rs.getString("content");
 				String author = rs.getString("author");
-				Date publishDate = new Date(rs.getLong("publishDate"));
-				Date modifyDate = new Date(rs.getLong("modifyDate"));
+				String publishDate = rs.getString("publishDate");
+				String modifyDate = rs.getString("modifyDate");
 				News n = new News(id, title, category, content, author, publishDate, modifyDate);
 				return n;
 			}
@@ -91,8 +91,8 @@ public class SqlNews implements INews
 				String category = rs.getString("category");
 				String content = rs.getString("content");
 				String author = rs.getString("author");
-				Date publishDate = new Date(rs.getLong("publishDate"));
-				Date modifyDate = new Date(rs.getLong("modifyDate"));
+				String publishDate = rs.getString("publishDate");
+				String modifyDate = rs.getString("modifyDate");
 				News n = new News(id, title, category, content, author, publishDate, modifyDate);
 				news.add(n);
 			}
@@ -118,8 +118,8 @@ public class SqlNews implements INews
 			querry.setString(2, n.getCategory());
 			querry.setString(3, n.getContent());
 			querry.setString(4, n.getAuthor());
-			querry.setLong(6, n.getPublishDate().getTime());
-			querry.setLong(7, n.getModifyDate().getTime());
+			querry.setString(6, n.getPublishDate());
+			querry.setString(7, n.getModifyDate());
 			querry.executeUpdate();
 		} 
 		catch (SQLException e) 
@@ -175,8 +175,8 @@ public class SqlNews implements INews
 				String category = rs.getString("category");
 				String content = rs.getString("content");
 				String author = rs.getString("author");
-				Date publishDate = new Date(rs.getLong("publishDate"));
-				Date modifyDate = new Date(rs.getLong("modifyDate"));
+				String publishDate = rs.getString("publishDate");
+				String modifyDate = rs.getString("modifyDate");
 				News n = new News(id, title, category, content, author, publishDate, modifyDate);
 				news.add(n);
 			}
@@ -206,8 +206,8 @@ public class SqlNews implements INews
 				String category = rs.getString("category");
 				String content = rs.getString("content");
 				String author = rs.getString("author");
-				Date publishDate = new Date(rs.getLong("publishDate"));
-				Date modifyDate = new Date(rs.getLong("modifyDate"));
+				String publishDate = rs.getString("publishDate");
+				String modifyDate = rs.getString("modifyDate");
 				News n = new News(id, title, category, content, author, publishDate, modifyDate);
 				news.add(n);
 			}
@@ -238,8 +238,8 @@ public class SqlNews implements INews
 				String category = rs.getString("category");
 				String content = rs.getString("content");
 				String author = rs.getString("author");
-				Date publishDate = new Date(rs.getLong("publishDate"));
-				Date modifyDate = new Date(rs.getLong("modifyDate"));
+				String publishDate = rs.getString("publishDate");
+				String modifyDate = rs.getString("modifyDate");
 				News n = new News(id, title, category, content, author, publishDate, modifyDate);
 				news.add(n);
 			}
