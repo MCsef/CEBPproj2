@@ -4,5 +4,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="C:/Program Files/Apache/apache-activemq-5.16.0/bin/activemq.jar"/>
 	<classpathentry kind="lib" path="C:/Program Files/Apache/apache-activemq-5.16.0/activemq-all-5.16.0.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/MySqlJDBC/mysql-connector-java-8.0.21/mysql-connector-java-8.0.21.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
