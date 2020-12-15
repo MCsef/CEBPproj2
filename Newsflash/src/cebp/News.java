@@ -28,6 +28,7 @@ public class News
 	
 	public String getTitle() {
 		return title;
+	}
 
 	public String getCategory() {
 		return category;

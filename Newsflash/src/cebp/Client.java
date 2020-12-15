@@ -7,24 +7,32 @@ public class Client implements ConsumerInterface<News>, ProducerInterface<News>
 	private String name;
 	private Dispatcher<News> dispatcher;
 	private ArrayList<News> news = new ArrayList<>();
+	
 	public Client(Dispatcher<News> dispatcher, String name) {
 		this.dispatcher = dispatcher;
 		this.name = name;
 	}
+	
 	public void addEvent(String eType) 
 	{
 		this.dispatcher.registerListener(new Event<News>(eType + "_NEWS"), this);
 		this.dispatcher.registerListener(new Event<News>(this.name + "_" + eType + "_NEWS"), this);
 		this.dispatcher.registerListener(new Event<News>("UPDATE_" + eType + "_NEWS"), this);
-		News filterNews = new News("", "", "", "", null, null);
+		News filterNews = new News(0, "", "", "", "", null, null);
 		this.sendNewRegisterEvent(filterNews);
 	}
+	
+	public void registerEvent(String type) {
+		this.dispatcher.registerListener(new Event<News>(type), this);
+	}
+	
 	@Override
 	public void produce(Event<News> e, News data) 
 	{
 		// TODO Auto-generated method stub
 		this.dispatcher.sendEvent(e, data);
 	}
+	
 	@Override
 	public void consume(Event<News> e, News data) 
 	{
@@ -44,29 +52,33 @@ public class Client implements ConsumerInterface<News>, ProducerInterface<News>
 			}
 		}
 	}
+	
 	@Override
 	public String getName() 
 	{
 		// TODO Auto-generated method stub
 		return this.name;
 	}
+	
 	public ArrayList<News> getNews() 
 	{
 		return this.news;
 	}
+	
 	private void sendNewRegisterEvent(News n) 
 	{
 		Event<News> registerEvent = new Event<News>("NEW_REGISTER_READER");
 		registerEvent.setEmmiter(this);
 		this.produce(registerEvent, n);
 	}
+	
 	private void updateNews(News n) 
 	{
-		for (News news : this.news)
+		for (News nn : this.news)
 		{
-			if (news.getID() == (n.getID())) 
+			if (nn.getID() == (n.getID())) 
 			{
-				news = n;
+				nn = n;
 				break;
 			}
 		}
@@ -79,6 +91,22 @@ public class Client implements ConsumerInterface<News>, ProducerInterface<News>
 	{
 		if (!this.news.contains(n))
 			this.news.add(n);
+	}
+	
+	public News readNews(int newsID) {
+		News n = null;
+		for (News nn : this.news) {
+			if ( nn.getID() == newsID ) {
+				n = nn;
+				break;
+			}
+		}
+		if (n != null) {
+			Event<News> readNews = new Event<News>("UPDATE_READER_NEWS");
+			readNews.setEmmiter(this);
+			this.produce(readNews, n);
+		}
+		return n;
 	}
 
 }

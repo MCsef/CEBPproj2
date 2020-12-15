@@ -8,12 +8,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class SqlNews implements SqlInterface<News>
+public class SqlNews implements INews
 {
 	private Connection conn;
 	private Statement st;
 	private String database;
 	private ResultSet rs;
+	
 	public SqlNews(Connection conn, String db)
 	{
 		this.conn = conn;
@@ -28,16 +29,12 @@ public class SqlNews implements SqlInterface<News>
 			e.printStackTrace();
 		}
 	}
+	
 	@Override
 	public void create(News n) 
 	{
 		// TODO Auto-generated method stub
-		if (checkDuplicate(n)) 
-		{
-			System.out.println("News with the same title: " + n.getTitle());
-			return;
-		}
-		String data = " values ('" + n.getID() + "', '" + n.getTitle() + "', '" + n.getCategory() + "', '"+ n.getContent() + "', '" + n.getAuthor() + "', '" + n.getPublishDate().getTime() + "', '" + n.getModifyDate().getTime() + "')";
+		String data = " values ('" + n.getID() + "', '" + n.getTitle() + "', '" + n.getCategory() + "', '"+ n.getContent() + "', '" + n.getAuthor() + "', '" + n.getPublishDate() + "', '" + n.getModifyDate() + "')";
 		String querry = "insert into " + this.database + " (id, title, category, content, author, publishDate, modifyDate) " + data;
 		try 
 		{
@@ -45,44 +42,43 @@ public class SqlNews implements SqlInterface<News>
 		} 
 		catch (SQLException e) 
 		{
-			// TODO Auto-generated catch block
-			System.out.println("Error while inserting a news: " + e);
+			System.out.println("Error while inserting news: " + e);
 			e.printStackTrace();
 		}
 	}
+	
 	@Override
-	public News get(String id) 
+	public News get(int ID) 
 	{
-		// TODO Auto-generated method stub
 		try 
 		{
 			PreparedStatement querry = this.conn.prepareStatement("select * from " + this.database + " where identifier=?");
-			querry.setString(1, id);
+			querry.setInt(1, ID);
 			this.rs = querry.executeQuery();
 			while (this.rs.next()) 
 			{
+				int id = rs.getInt("id");
 				String title = rs.getString("title");
 				String category = rs.getString("category");
 				String content = rs.getString("content");
 				String author = rs.getString("author");
 				Date publishDate = new Date(rs.getLong("publishDate"));
 				Date modifyDate = new Date(rs.getLong("modifyDate"));
-				News n = new News(title, category, content, author, publishDate, modifyDate);
+				News n = new News(id, title, category, content, author, publishDate, modifyDate);
 				return n;
 			}
 		} 
 		catch (SQLException e) 
 		{
-			// TODO Auto-generated catch block
-			System.out.println("Error while getting all news: " + e);
+			System.out.println("Error while getting news: " + e);
 			e.printStackTrace();
 		}
 		return null;
 	}
+	
 	@Override
 	public ArrayList<News> getAll() 
 	{
-		// TODO Auto-generated method stub
 		ArrayList<News> news = new ArrayList<>();
 		String querry = "select * from " + this.database;
 		try 
@@ -90,13 +86,14 @@ public class SqlNews implements SqlInterface<News>
 			this.rs = this.st.executeQuery(querry);
 			while (this.rs.next()) 
 			{
+				int id = rs.getInt("id");
 				String title = rs.getString("title");
 				String category = rs.getString("category");
 				String content = rs.getString("content");
 				String author = rs.getString("author");
 				Date publishDate = new Date(rs.getLong("publishDate"));
 				Date modifyDate = new Date(rs.getLong("modifyDate"));
-				News n = new News(title, category, content, author, publishDate, modifyDate);
+				News n = new News(id, title, category, content, author, publishDate, modifyDate);
 				news.add(n);
 			}
 			return news;
@@ -109,6 +106,7 @@ public class SqlNews implements SqlInterface<News>
 		}
 		return null;
 	}
+	
 	@Override
 	public void update(News n) 
 	{
@@ -131,6 +129,7 @@ public class SqlNews implements SqlInterface<News>
 			e.printStackTrace();
 		}
 	}
+	
 	@Override
 	public void delete(int id) 
 	{
@@ -145,10 +144,11 @@ public class SqlNews implements SqlInterface<News>
 		catch (SQLException e) 
 		{
 			// TODO Auto-generated catch block
-			System.out.println("Error while deleting a news: " + e);
+			System.out.println("Error while deleting news: " + e);
 			e.printStackTrace();
 		}
 	}
+	
 	public PreparedStatement getFilter(String query) {
 		try {
 			PreparedStatement querry = this.conn.prepareStatement(query);
@@ -159,23 +159,25 @@ public class SqlNews implements SqlInterface<News>
 		}
 		return null;
 	}
-	public ArrayList<News> getByAuthor(String authorFilter) 
+	
+	public ArrayList<News> getByAuthor(String filter) 
 	{
 		try 
 		{
 			ArrayList<News> news = new ArrayList<>();
 			PreparedStatement querry = this.conn.prepareStatement("select * from " + this.database + " where author=?");
-			querry.setString(1, authorFilter);
+			querry.setString(1, filter);
 			this.rs = querry.executeQuery();
 			while (this.rs.next()) 
 			{
+				int id = rs.getInt("id");
 				String title = rs.getString("title");
 				String category = rs.getString("category");
 				String content = rs.getString("content");
 				String author = rs.getString("author");
 				Date publishDate = new Date(rs.getLong("publishDate"));
 				Date modifyDate = new Date(rs.getLong("modifyDate"));
-				News n = new News(title, category, content, author, publishDate, modifyDate);
+				News n = new News(id, title, category, content, author, publishDate, modifyDate);
 				news.add(n);
 			}
 			return news;
@@ -183,28 +185,30 @@ public class SqlNews implements SqlInterface<News>
 		catch (SQLException e) 
 		{
 			// TODO Auto-generated catch block
-			System.out.println("Error while getting all news: " + e);
+			System.out.println("Error while getting filtered news: " + e);
 			e.printStackTrace();
 		}
 		return null;
 	}
-	public ArrayList<News> getByCategory(String categoryFilter) 
+	
+	public ArrayList<News> getByCategory(String filter) 
 	{
 		try 
 		{
 			ArrayList<News> news = new ArrayList<>();
 			PreparedStatement querry = this.conn.prepareStatement("select * from " + this.database + " where category=?");
-			querry.setString(1, categoryFilter);
+			querry.setString(1, filter);
 			this.rs = querry.executeQuery();
 			while (this.rs.next()) 
 			{
+				int id = rs.getInt("id");
 				String title = rs.getString("title");
 				String category = rs.getString("category");
 				String content = rs.getString("content");
 				String author = rs.getString("author");
 				Date publishDate = new Date(rs.getLong("publishDate"));
 				Date modifyDate = new Date(rs.getLong("modifyDate"));
-				News n = new News(title, category, content, author, publishDate, modifyDate);
+				News n = new News(id, title, category, content, author, publishDate, modifyDate);
 				news.add(n);
 			}
 			return news;
@@ -212,11 +216,12 @@ public class SqlNews implements SqlInterface<News>
 		catch (SQLException e) 
 		{
 			// TODO Auto-generated catch block
-			System.out.println("Error while getting all news: " + e);
+			System.out.println("Error while getting filtered news: " + e);
 			e.printStackTrace();
 		}
 		return null;
 	}
+	
 	public ArrayList<News> getByCategoryAndAuthor(String categoryFilter, String authorFilter) 
 	{
 		try 
@@ -228,13 +233,14 @@ public class SqlNews implements SqlInterface<News>
 			this.rs = querry.executeQuery();
 			while (this.rs.next()) 
 			{
+				int id = rs.getInt("id");
 				String title = rs.getString("title");
 				String category = rs.getString("category");
 				String content = rs.getString("content");
 				String author = rs.getString("author");
 				Date publishDate = new Date(rs.getLong("publishDate"));
 				Date modifyDate = new Date(rs.getLong("modifyDate"));
-				News n = new News(title, category, content, author, publishDate, modifyDate);
+				News n = new News(id, title, category, content, author, publishDate, modifyDate);
 				news.add(n);
 			}
 			return news;
@@ -242,33 +248,10 @@ public class SqlNews implements SqlInterface<News>
 		catch (SQLException e) 
 		{
 			// TODO Auto-generated catch block
-			System.out.println("Error while getting all news: " + e);
+			System.out.println("Error while getting filtered news: " + e);
 			e.printStackTrace();
 		}
 		return null;
-	}
-	private boolean checkDuplicate(News n) 
-	{
-		try 
-		{
-			PreparedStatement querry = this.conn.prepareStatement("select * from " + this.database + " where title=?");
-			querry.setString(1, n.getTitle());
-			this.rs = querry.executeQuery();
-			while (this.rs.next()) 
-			{
-				String title = rs.getString("title");
-				if (title.equals(n.getTitle()))
-					return true;
-			}
-			return false;
-		} 
-		catch (SQLException e) 
-		{
-			// TODO Auto-generated catch block
-			System.out.println("Error while checking for duplicates: " + e);
-			e.printStackTrace();
-		}
-		return true;
 	}
 	
 }

@@ -14,7 +14,7 @@ public class Consumer implements ConsumerInterface<News>
 	}
 	public Consumer(Producer producer) 
 	{
-		SqlFactory factory = new SqlFactory();
+		JDBC factory = new JDBC();
 		this.sqlNews = factory.getNews();
 		this.producer = producer;
 	}
