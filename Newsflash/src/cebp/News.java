@@ -11,6 +11,7 @@ public class News
 	private String author;
 	private String publishDate;
 	private String modifyDate;
+	private int numberOfClients;
 	
 	public News(int id, String title, String category, String content, String author, String publishDate, String modifyDate) {
 		this.id = id;
@@ -20,6 +21,7 @@ public class News
 		this.author=author;
 		this.publishDate=publishDate;
 		this.modifyDate=modifyDate;
+		numberOfClients = 0;
 	}
 	
 	public int getID() {
@@ -50,6 +52,10 @@ public class News
 		return modifyDate;
 	}
 	
+	public int getNumberOfClients() {
+		return numberOfClients;
+	}
+	
 	public void setID(int id) {
 		this.id = id;
 	}
@@ -76,6 +82,10 @@ public class News
 	
 	public void setModifyDate(String modifyDate) {
 		this.modifyDate = modifyDate;
+	}
+	
+	public void setNumberOfClients(int numberOfClients) {
+		this.numberOfClients = numberOfClients;
 	}
 	
 	public String toString() {

@@ -104,6 +104,7 @@ public class Client implements ConsumerInterface<News>, ProducerInterface<News>
 		if (n != null) {
 			Event<News> readNews = new Event<News>("UPDATE_CLIENT_NEWS");
 			readNews.setEmmiter(this);
+			n.setNumberOfClients(n.getNumberOfClients() + 1);
 			this.produce(readNews, n);
 		}
 		return n;

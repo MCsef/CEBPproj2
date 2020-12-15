@@ -34,16 +34,24 @@ public class SqlNews implements INews
 	public void create(News n) 
 	{
 		// TODO Auto-generated method stub
-		String data = " values ('" + n.getID() + "', '" + n.getTitle() + "', '" + n.getCategory() + "', '"+ n.getContent() + "', '" + n.getAuthor() + "', '" + n.getPublishDate() + "', '" + n.getModifyDate() + "')";
-		String querry = "insert into " + this.database + " (id, title, category, content, author, publishDate, modifyDate) " + data;
-		try 
+		if (checkDuplicate(n))
 		{
-			this.st.execute(querry);
-		} 
-		catch (SQLException e) 
+			System.out.println("News with the same id: " + n.getID());
+			return;
+		}
+		else
 		{
-			System.out.println("Error while inserting news: " + e);
-			e.printStackTrace();
+			String data = " values ('" + n.getID() + "', '" + n.getTitle() + "', '" + n.getCategory() + "', '"+ n.getContent() + "', '" + n.getAuthor() + "', '" + n.getPublishDate() + "', '" + n.getModifyDate() + "', '" + n.getNumberOfClients()+ "')";
+			String querry = "insert into " + this.database + " (id, title, category, content, author, publishDate, modifyDate, noRead) " + data;
+			try 
+			{
+				this.st.execute(querry);
+			} 
+			catch (SQLException e) 
+			{
+				System.out.println("Error while inserting news: " + e);
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -113,13 +121,14 @@ public class SqlNews implements INews
 		// TODO Auto-generated method stub
 		try 
 		{
-			PreparedStatement querry = this.conn.prepareStatement("UPDATE " + this.database + " set title=?, category=?, content=?, author=?, publishDate=?, modifyDate=? where identifier=?");
+			PreparedStatement querry = this.conn.prepareStatement("UPDATE " + this.database + " set title=?, category=?, content=?, author=?, publishDate=?, modifyDate=? where id=?");
 			querry.setString(1, n.getTitle());
 			querry.setString(2, n.getCategory());
 			querry.setString(3, n.getContent());
 			querry.setString(4, n.getAuthor());
-			querry.setString(6, n.getPublishDate());
-			querry.setString(7, n.getModifyDate());
+			querry.setString(5, n.getPublishDate());
+			querry.setString(6, n.getModifyDate());
+			querry.setInt(7, n.getID());
 			querry.executeUpdate();
 		} 
 		catch (SQLException e) 
@@ -253,5 +262,27 @@ public class SqlNews implements INews
 		}
 		return null;
 	}
-	
+	private boolean checkDuplicate(News n) {
+		try 
+		{
+			PreparedStatement querry = this.conn
+					.prepareStatement("select * from " + this.database + " where id=?");
+			querry.setInt(1, n.getID());
+			this.rs = querry.executeQuery();
+
+			while (this.rs.next()) {
+				int id = rs.getInt("id");
+				if (id == (n.getID()))
+					return true;
+			}
+			return false;
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Error while checking for duplicates: " + e);
+			e.printStackTrace();
+		}
+
+		return true;
+	}
 }
