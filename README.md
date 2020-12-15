@@ -14,10 +14,4 @@ interesati de aparitia unui eveniment gen "stire citita". Cititorii se
 pot abona la una sau mai multe stiri, specificand domeniile de interes
 si alte atribute (data, sursa etc.).
 
-Project Type B:
-
-The architecture is similar to Project Type A, with the exception that the dispatcher will not be implemented in the application. Instead, the students must use an existing software infrastructure (service) that provide dispatching functionality. The technology of choice in this respect is Java Message Service (JMS), by using Topic resources to model the dispatcher, with events being represented by asynchronous JMS messages.
-
-As above, events have types represented by a character string ID, and the event consumers register to the JMS server by specifying the types of events they are interested in. A consumer can register to more than one event types.
-
-For both types of projects, event consumers are specific classes that receive the events sent by the dispatcher, and take actions according to the project specification. 
+Project Type A.
